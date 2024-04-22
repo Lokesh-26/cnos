@@ -105,10 +105,10 @@ def run_inference(template_dir, rgb_path, num_max_dets, conf_threshold, stabilit
 
         image = torch.from_numpy(np.array(image.convert("RGB")) / 255).float()
         templates.append(image)
-        
+
     templates = torch.stack(templates).permute(0, 3, 1, 2)
     boxes = torch.tensor(np.array(boxes))
-    
+
     processing_config = OmegaConf.create(
         {
             "image_size": 224,
@@ -156,10 +156,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--template_dir", nargs="?", help="Path to root directory of the template")
     parser.add_argument("--rgb_path", nargs="?", help="Path to RGB image")
-    parser.add_argument("--num_max_dets", nargs="?", default=1, type=int, help="Number of max detections")
-    parser.add_argument("--confg_threshold", nargs="?", default=0.5, type=float, help="Confidence threshold")
-    parser.add_argument("--stability_score_thresh", nargs="?", default=0.97, type=float, help="stability_score_thresh of SAM")
+    parser.add_argument("--num_max_dets", nargs="?", default=2, type=int, help="Number of max detections")
+    parser.add_argument("--confg_threshold", nargs="?", default=0.2, type=float, help="Confidence threshold")
+    parser.add_argument("--stability_score_thresh", nargs="?", default=0.87, type=float, help="stability_score_thresh of SAM")
     args = parser.parse_args()
-
+    # args.template_dir ="/media/gouda/3C448DDD448D99F2/segmentation/cnos/tmp/custom_dataset"
+    # args.rgb_path = "/media/gouda/3C448DDD448D99F2/segmentation/cnos/media/demo3/big_klt.png"
     os.makedirs(f"{args.template_dir}/cnos_results", exist_ok=True)
     run_inference(args.template_dir, args.rgb_path, num_max_dets=args.num_max_dets, conf_threshold=args.confg_threshold, stability_score_thresh=args.stability_score_thresh)
